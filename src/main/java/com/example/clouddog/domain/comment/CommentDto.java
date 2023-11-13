@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Setter
 public class CommentDto {
     private String cmContent;
-    private String rcmContent;
     private LocalDate cmTime;
 
     public CommentDto() {
