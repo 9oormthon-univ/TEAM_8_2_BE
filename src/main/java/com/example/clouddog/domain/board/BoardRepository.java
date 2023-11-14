@@ -15,6 +15,7 @@ public class BoardRepository {
 
     public Board save(Board bd){
         bd.setBdId(++sequence);
+        bd.setBdTime(LocalDate.now());
         boards.put(bd.getBdId(), bd);
         return bd;
     }

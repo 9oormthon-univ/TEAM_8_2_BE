@@ -10,15 +10,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class CommentRepository {
-    //private static final Map<Map<Long, Long>, Comment> comments = new ConcurrentHashMap<>();
-    //private static final ArrayList<ArrayList<Comment>> comments=new ArrayList<>();//[글인덱스][댓글인덱스]
+    //여기 맵인지 그냥 배열인지는 게시글마다 테이블이 있는가에 따라 달라짐
+    //하지만 어차피 bd에 넣으면 아래 배열따위는 필요없음
     private static final ArrayList<Map<Long, Comment>> comments=new ArrayList<>();//글번호가 인덱스인 배열. 값은 댓글 들어간 map
-    private static Long sequence =0L;
-    private static Long reSequence=0L;
 
-    public Comment save(Long boardId, Comment cm){
+    private static Long sequence =0L;
+
+    public Comment save(Long boardId, Long preCmId, Comment cm){
         cm.setCmId(++sequence);
-        if (comments.size()<boardId || comments.isEmpty()){//comments.isEmpty() || comments.get(boardId.intValue())==null){
+        cm.setCmTime(LocalDate.now());
+        //대댓글이면 선댓글의 id 저장
+        if (preCmId!=null)
+            cm.setPreviousCmId(preCmId);
+        //배열의 보드인덱스의 맵에 댓글 저장
+        if (comments.size()<boardId || comments.isEmpty()){
             while (comments.size()<boardId){
                 comments.add(new ConcurrentHashMap<>());
             }
@@ -35,6 +40,15 @@ public class CommentRepository {
         return comments.get(bdId.intValue()).get(cmId);
     }
 
+    public void addCmLikes(Long bdId, Long cmId){
+        Comment cm = findById(bdId, cmId);
+        cm.setCmLikes(cm.getCmLikes()+1);
+    }
+    public void subCmLikes(Long bdId, Long cmId){
+        Comment cm = findById(bdId, cmId);
+        if (cm.getCmLikes()>0)
+            cm.setCmLikes(cm.getCmLikes()-1);
+    }
     public List<Comment> findAll(Long bdId){
         return new ArrayList<>(comments.get(bdId.intValue()).values());
     }
@@ -46,23 +60,5 @@ public class CommentRepository {
     public void delete(Long bdId, Long cmId){
         comments.get(bdId.intValue()).remove(cmId);
     }
-    //대댓글 관련
-    public List<ReComment> rcmFindAll(Long bdId, Long cmId){
-        return findById(bdId, cmId).findAllRcm();
-    }
-    public Long rcmSave(Long bdId, Long cmId, ReComment rcmContent){
-        Comment findCm = findById(bdId, cmId);
-        rcmContent.setRcmId(++reSequence);
-        findCm.setRcmContent(rcmContent.getRcmId(), rcmContent);
-        return rcmContent.getRcmId();
-    }
-    public void rcmUpdate(Long bdId, Long cmId, Long rcmId, ReComment updateRcm){
-        Comment findCm = findById(bdId, cmId);
-        ReComment findRcm = findCm.getRcmContent(rcmId);
-        findRcm.setRcmContent(updateRcm.getRcmContent());
-        findRcm.setRcmTime(updateRcm.getRcmTime());
-    }
-    public void rcmDelete(Long bdId, Long cmId, Long rcmId){
-        findById(bdId, cmId).deleteRcm(rcmId);
-    }
+
 }

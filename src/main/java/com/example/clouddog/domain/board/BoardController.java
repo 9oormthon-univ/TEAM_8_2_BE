@@ -7,20 +7,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@RestController//여기에 있으니까 아래 @RequestBody 다 생략해도 되나
-@RequestMapping("/api")
+@RestController
+@RequestMapping("/api/v1")
 public class BoardController {
     private BoardRepository boardRepository = new BoardRepository();
 
     /**
      * Board
-     * 목록 조회: GET '/board/{bdTag}'
-     * 글 등록: POST '/board
-     * => body로 : {bdName}/{bdTime}/{bdPlace}/{bdTag}/{bdText}'
-     * ->응답으로 bdId
-     * 글 수정: PATCH '/board/{bdId}
-     * => body로 : /수정사항'
-     * 글 삭제: DELETE '/board/{bdId}'
+     * 목록 조회
+     * 글 등록
+     * 글 수정
+     * 글 삭제
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/boards/{bdTag}")

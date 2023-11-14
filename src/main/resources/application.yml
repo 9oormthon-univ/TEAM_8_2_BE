@@ -2,14 +2,15 @@ server:
   port: 8092
 
 spring:
-  profiles:
-    active: prod
+  config:
+    activate:
+      on-profile: prod
 
   datasource:
-    url: ${spring.datasource.url}
-    username: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    driver-class-name: ${spring.datasource.driver-class-name}
+    url: jdbc:mysql://43.202.89.97:55359/clouddog?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -25,4 +26,4 @@ logging:
     org.hibernate.sql: debug
     org.hibernate.type: trace
 
-FIREBASE_KEY: ${FIREBASE_KEY}
+FIREBASE_KEY: ./serviceAccountKey.json

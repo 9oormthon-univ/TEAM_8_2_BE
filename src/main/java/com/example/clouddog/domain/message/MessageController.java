@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@RestController//여기에 있으니까 아래 @RequestBody 다 생략해도 되나
-@RequestMapping("/api")
+@RestController
+@RequestMapping("/api/v1")
 public class MessageController {
     /**
      * Message
-     * 메세지 조회: GET '/messages'
-     * 메세지 등록: POST '/messages/{msgText}/{msgTime}'메세지 텍스트/시간정보 ->messageId 생성필요 응답으로 줌
-     * 메세지 수정?: PATCH '/messages/{msgId}/{msgText}'
-     * 삭제,,,는?
+     * 메세지 조회
+     * 메세지 등록
+     * 메세지 수정
+     * 메시지 삭제
      */
     private MessageRepository messageRepository = new MessageRepository();
     @ResponseStatus(HttpStatus.OK)

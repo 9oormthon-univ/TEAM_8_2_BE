@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 @Getter @Setter
 public class BoardDto {
@@ -13,7 +12,7 @@ public class BoardDto {
     private String bdPlace;
     private Integer bdTag;
     private String bdContent;
-    private ArrayList<String> bdImageUrls;
+    private String bdImageUrls;
 
     public BoardDto() {
     }
