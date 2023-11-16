@@ -29,7 +29,7 @@ public class CommentController {
     @PostMapping("/comments/{bdId}/{preCmId}")
     public Long addComment(@PathVariable Long bdId, @PathVariable Long preCmId, @RequestBody Comment cmData){
         Comment cm = commentRepository.save(bdId, preCmId, cmData);
-        return cm.getCmId();
+        return cm.getCommentId();
     }
     //불러오기가 필요할까........
 //    @ResponseStatus(HttpStatus.OK)

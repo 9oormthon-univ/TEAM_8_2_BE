@@ -17,8 +17,8 @@ public class CommentRepository {
     private static Long sequence =0L;
 
     public Comment save(Long boardId, Long preCmId, Comment cm){
-        cm.setCmId(++sequence);
-        cm.setCmTime(LocalDate.now());
+        cm.setCommentId(++sequence);
+        cm.setCommentTime(LocalDate.now());
         //대댓글이면 선댓글의 id 저장
         if (preCmId!=null)
             cm.setPreviousCmId(preCmId);
@@ -28,11 +28,11 @@ public class CommentRepository {
                 comments.add(new ConcurrentHashMap<>());
             }
             comments.add(new ConcurrentHashMap<>());
-            comments.get(boardId.intValue()).put(cm.getCmId(), cm);
+            comments.get(boardId.intValue()).put(cm.getCommentId(), cm);
             return cm;
         }else {
             comments.add(new ConcurrentHashMap<>());
-            comments.get(boardId.intValue()).put(cm.getCmId(), cm);
+            comments.get(boardId.intValue()).put(cm.getCommentId(), cm);
             return cm;
         }
     }
@@ -42,20 +42,20 @@ public class CommentRepository {
 
     public void addCmLikes(Long bdId, Long cmId){
         Comment cm = findById(bdId, cmId);
-        cm.setCmLikes(cm.getCmLikes()+1);
+        cm.setCommentLikes(cm.getCommentLikes()+1);
     }
     public void subCmLikes(Long bdId, Long cmId){
         Comment cm = findById(bdId, cmId);
-        if (cm.getCmLikes()>0)
-            cm.setCmLikes(cm.getCmLikes()-1);
+        if (cm.getCommentLikes()>0)
+            cm.setCommentLikes(cm.getCommentLikes()-1);
     }
     public List<Comment> findAll(Long bdId){
         return new ArrayList<>(comments.get(bdId.intValue()).values());
     }
     public void update(Long bdId, Long cmId, CommentDto updateCm){
         Comment findCm = findById(bdId, cmId);
-        findCm.setCmContent(updateCm.getCmContent());
-        findCm.setCmTime(LocalDate.now());
+//        findCm.setCommentContent(updateCm.getCmContent());
+        findCm.setCommentTime(LocalDate.now());
     }
     public void delete(Long bdId, Long cmId){
         comments.get(bdId.intValue()).remove(cmId);

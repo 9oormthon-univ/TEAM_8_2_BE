@@ -7,8 +7,10 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class CommentDto {
-    private String cmContent;
-    private LocalDate cmTime;
+
+    private String commentContent;
+
+    private LocalDate commentTime;
 
     public CommentDto() {
     }
