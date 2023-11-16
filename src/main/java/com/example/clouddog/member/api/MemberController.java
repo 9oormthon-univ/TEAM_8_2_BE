@@ -1,5 +1,6 @@
 package com.example.clouddog.member.api;
 
+import com.example.clouddog.member.api.dto.request.FriendSaveReqDto;
 import com.example.clouddog.member.api.dto.request.MemberProfileUpdateReqDto;
 import com.example.clouddog.member.api.dto.respnse.MemberResDto;
 import com.example.clouddog.member.api.dto.respnse.MembersResDto;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,14 +26,9 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/success")
-    public ResponseEntity<String> loginSuccess() {
-        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
-    }
-
     @GetMapping("/my-info")
-    public ResponseEntity<MemberResDto> myInfo(@RequestParam(name = "email") String email) {
-        return new ResponseEntity<>(memberService.myInfo(email), HttpStatus.OK);
+    public ResponseEntity<MemberResDto> memberInfo(@RequestParam(name = "email") String email) {
+        return new ResponseEntity<>(memberService.memberInfo(email), HttpStatus.OK);
     }
 
     @PutMapping("/{memberId}")
@@ -41,9 +38,22 @@ public class MemberController {
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<MembersResDto> membersInfo() {
-        return new ResponseEntity<>(memberService.membersInformation(), HttpStatus.OK);
+    @GetMapping("/{memberId}/friend/info")
+    public ResponseEntity<MemberResDto> friendInfo(@PathVariable(name = "memberId") Long memberId,
+                                                   @RequestParam(name = "email") String friendEmail) {
+        return new ResponseEntity<>(memberService.friendInfo(friendEmail), HttpStatus.OK);
+    }
+
+    @PostMapping("/{memberId}/friend")
+    public ResponseEntity<String> friendAdd(@PathVariable(name = "memberId") Long memberId,
+                                            @RequestBody FriendSaveReqDto friendSaveReqDto) {
+        memberService.addFriend(friendSaveReqDto);
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+    }
+
+    @GetMapping("/{memberId}/friends")
+    public ResponseEntity<MembersResDto> friendsInfoList(@PathVariable(name = "memberId") Long memberId) {
+        return new ResponseEntity<>(memberService.friendsInfoList(memberId), HttpStatus.OK);
     }
 
 }
