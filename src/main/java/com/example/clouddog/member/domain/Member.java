@@ -58,7 +58,7 @@ public class Member implements UserDetails {
     private int mindCount;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Friends> friends = new ArrayList<>();
+    private List<Friendship> friends = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -96,7 +96,7 @@ public class Member implements UserDetails {
     }
 
     @Builder
-    private Member(String memberName, Role role, String email, String name, String picture, List<Friends> friends) {
+    private Member(String memberName, Role role, String email, String name, String picture, List<Friendship> friends) {
         this.memberName = memberName;
         this.role = role;
         this.email = email;
