@@ -1,15 +1,22 @@
 package com.example.clouddog.member.domain;
 
+import com.example.clouddog.member.api.dto.request.MemberProfileUpdateReqDto;
 import com.google.firebase.auth.FirebaseToken;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +45,20 @@ public class Member implements UserDetails {
     private String name;
 
     private String picture;
+
+    private String nickName;
+
+    private int petNumber;
+
+    private String petName;
+
+    @Lob
+    private String petDescription;
+
+    private int mindCount;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Friends> friends = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -75,12 +96,13 @@ public class Member implements UserDetails {
     }
 
     @Builder
-    private Member(String memberName, Role role, String email, String name, String picture) {
+    private Member(String memberName, Role role, String email, String name, String picture, List<Friends> friends) {
         this.memberName = memberName;
         this.role = role;
         this.email = email;
         this.name = name;
         this.picture = picture;
+        this.friends = friends;
     }
 
     public void update(FirebaseToken token) {
@@ -88,5 +110,13 @@ public class Member implements UserDetails {
         this.email = token.getEmail();
         this.name = token.getName();
         this.picture = token.getPicture();
+    }
+
+    public void profileUpdate(MemberProfileUpdateReqDto memberProfileUpdateReqDto) {
+        this.nickName = memberProfileUpdateReqDto.nickName();
+        this.petNumber = memberProfileUpdateReqDto.petNumber();
+        this.petName = memberProfileUpdateReqDto.petName();
+        this.petDescription = memberProfileUpdateReqDto.petDescription();
+        this.mindCount = memberProfileUpdateReqDto.mindCount();
     }
 }
