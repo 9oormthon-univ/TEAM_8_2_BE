@@ -3,6 +3,7 @@ package com.example.clouddog.global.config;
 import com.example.clouddog.auth.application.MemberDetailService;
 import com.example.clouddog.auth.filter.FirebaseTokenFilter;
 import com.google.firebase.auth.FirebaseAuth;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -27,7 +30,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(c -> {
+                            CorsConfigurationSource source = request -> {
+                                CorsConfiguration config = new CorsConfiguration();
+                                config.setAllowedOrigins(
+                                        List.of("*")
+                                );
+                                config.setAllowedMethods(
+                                        List.of("*")
+                                );
+                                config.setAllowedHeaders(
+                                        List.of("*")
+                                );
+                                return config;
+                            };
+                            c.configurationSource(source);
+                        }
+                )
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest()
                         .authenticated())

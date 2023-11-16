@@ -1,16 +1,15 @@
 package com.example.clouddog.member.api.dto.respnse;
 
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MembersResDto {
-    private List<MemberResDto> memberResDtos;
-
-    public MembersResDto(List<MemberResDto> memberResDtos) {
-        this.memberResDtos = memberResDtos;
+@Builder
+public record MembersResDto(
+        List<MemberResDto> memberResDtos
+) {
+    public static MembersResDto of(List<MemberResDto> memberResDtos) {
+        return MembersResDto.builder()
+                .memberResDtos(memberResDtos)
+                .build();
     }
 }
