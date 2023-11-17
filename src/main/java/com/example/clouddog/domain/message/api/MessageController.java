@@ -23,10 +23,10 @@ public class MessageController {
 
 
     //메시지 불러오기
-    @GetMapping("/messages")
-    public ResponseEntity<List<MessageResDto>> findAllMessages(){
+    @GetMapping("/{memberId}/messages")
+    public ResponseEntity<List<MessageResDto>> findAllMessages(@PathVariable Long memberId){
 
-        return new ResponseEntity<>(messageService.messageFind(), HttpStatus.OK);
+        return new ResponseEntity<>(messageService.messageFind(memberId), HttpStatus.OK);
     }
 
     //메시지 작성

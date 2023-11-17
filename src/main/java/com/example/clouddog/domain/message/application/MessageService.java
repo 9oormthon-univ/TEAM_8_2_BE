@@ -1,5 +1,6 @@
 package com.example.clouddog.domain.message.application;
 
+import com.example.clouddog.domain.board.exception.NotFoundMemberException;
 import com.example.clouddog.domain.message.api.dto.MessageReqDto;
 import com.example.clouddog.domain.message.api.dto.MessageResDto;
 import com.example.clouddog.domain.message.domain.Message;
@@ -26,9 +27,10 @@ public class MessageService {
     }
 
     //메시지 전부 불러오기
-    public List<MessageResDto> messageFind(){
+    public List<MessageResDto> messageFind(Long memberId){
         List<MessageResDto> returnList = new ArrayList<>();
-        for (Message message: messageRepository.findAll()) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+        for (Message message: messageRepository.findByMember(member)) {
             MessageResDto messageDto = new MessageResDto(
                     message.getMessageId(),
                     message.getMessageContent(),
