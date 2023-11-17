@@ -31,8 +31,9 @@ public class BoardController {
 
     //페이징x
     //게시글 목록 불러오기 _ tag가 0이면 전체, 12345면 해당 목록
-    @GetMapping("/boards/{bdTag}")
-    public ResponseEntity<List<BoardDto>> board(@PathVariable Integer bdTag) {
+    @GetMapping("/{memberId}/boards/{bdTag}")
+    public ResponseEntity<List<BoardDto>> board(@PathVariable(name = "memberId") Long memberId,
+                                                @PathVariable Integer bdTag) {
         if (bdTag == 0) {
             return new ResponseEntity<>(boardService.findAll(), HttpStatus.OK);
         } else {

@@ -3,8 +3,8 @@ package com.example.clouddog.member.api;
 import com.example.clouddog.member.api.dto.request.FriendSaveReqDto;
 import com.example.clouddog.member.api.dto.request.MemberProfileUpdateReqDto;
 import com.example.clouddog.member.api.dto.respnse.MemberResDto;
-import com.example.clouddog.member.api.dto.respnse.MembersResDto;
 import com.example.clouddog.member.application.MemberService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,8 +52,11 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/friends")
-    public ResponseEntity<MembersResDto> friendsInfoList(@PathVariable(name = "memberId") Long memberId) {
-        return new ResponseEntity<>(memberService.friendsInfoList(memberId), HttpStatus.OK);
+    public ResponseEntity<Page<MemberResDto>> friendsInfoList(@PathVariable(name = "memberId") Long memberId,
+                                                              @RequestParam(value = "page", defaultValue = "0") int page,
+                                                              @RequestParam(value = "size", defaultValue = "4") int size) {
+
+        return new ResponseEntity<>(memberService.friendsInfoList(memberId, page, size), HttpStatus.OK);
     }
 
 }

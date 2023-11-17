@@ -7,6 +7,8 @@ import com.example.clouddog.domain.board.domain.Board;
 import com.example.clouddog.domain.board.domain.repository.BoardRepository;
 import com.example.clouddog.domain.board.exception.NotFoundBoardException;
 import com.example.clouddog.domain.board.exception.NotFoundMemberException;
+import com.example.clouddog.image.domain.Image;
+import com.example.clouddog.image.domain.repository.ImageRepository;
 import com.example.clouddog.member.domain.Member;
 import com.example.clouddog.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -22,16 +24,20 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final ImageRepository imageRepository;
     //private final CommentRepository commentRepository;
 
-    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository) {
+    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository,
+                        ImageRepository imageRepository) {
         this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
+        this.imageRepository = imageRepository;
     }
 
     // 게시글 저장
     public void boardSave(Long memberId, BoardReqDto boardDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+        Image image = imageRepository.findById(boardDto.getImageId()).orElseThrow(); // 이미지 id 받아서 image 찾기
 
         Board board = new Board(
                 member,
@@ -39,7 +45,8 @@ public class BoardService {
                 boardDto.getBdPlace(),
                 boardDto.getBdTag(),
                 boardDto.getBdContent(),
-                boardDto.getBdTime()
+                boardDto.getBdTime(),
+                image
         );
 
         boardRepository.save(board);
