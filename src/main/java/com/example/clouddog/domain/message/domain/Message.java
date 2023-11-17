@@ -28,7 +28,8 @@ public class Message {
     @Temporal(TemporalType.DATE)
     private LocalDate messageTime;
 
-    public Message(String messageContent) {
+    public Message(Member member, String messageContent) {
+        this.member=member;
         this.messageContent=messageContent;
         this.messageTime=LocalDate.now();
     }

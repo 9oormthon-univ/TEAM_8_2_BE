@@ -3,11 +3,14 @@ package com.example.clouddog.domain.comment.application;
 import com.example.clouddog.domain.board.domain.Board;
 import com.example.clouddog.domain.board.domain.repository.BoardRepository;
 import com.example.clouddog.domain.board.exception.NotFoundBoardException;
+import com.example.clouddog.domain.board.exception.NotFoundMemberException;
 import com.example.clouddog.domain.comment.api.dto.CommentReqDto;
 import com.example.clouddog.domain.comment.api.dto.CommentResDto;
 import com.example.clouddog.domain.comment.domain.Comment;
 import com.example.clouddog.domain.comment.domain.repository.CommentRepository;
 import com.example.clouddog.domain.comment.exception.NotFoundCommentException;
+import com.example.clouddog.member.domain.Member;
+import com.example.clouddog.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,20 +26,24 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
+    private final MemberRepository memberRepository;
 
-    public CommentService(CommentRepository commentRepository, BoardRepository boardRepository){
+    public CommentService(CommentRepository commentRepository, BoardRepository boardRepository, MemberRepository memberRepository){
 
         this.commentRepository=commentRepository;
         this.boardRepository=boardRepository;
+        this.memberRepository=memberRepository;
     }
 
     // 댓글 저장
     public void commentSave(Long boardId, CommentReqDto commentDto){
         Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
+        Member member = memberRepository.findById(commentDto.getMemberId()).orElseThrow(NotFoundMemberException::new);
         Comment comment= new Comment(
                 commentDto.getCmContent(),
                 commentDto.getPreviousCommentId(),
-                board
+                board,
+                member
         );
         commentRepository.save(comment);
         //실패

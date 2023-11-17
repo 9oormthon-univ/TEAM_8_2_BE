@@ -9,15 +9,17 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardDto {
-    private String memberId;
+    private Long memberId;
     private Long bdId;
     private String bdTitle;
     private int bdTag;
     private String bdImageUrl;
 
     public BoardDto(Long bdId,
+                    Long memberId,
                     String boardTitle,
                     int boardTag) {
+        this.memberId=memberId;
         this.bdId=bdId;
         this.bdTitle=boardTitle;
         this.bdTag=boardTag;
