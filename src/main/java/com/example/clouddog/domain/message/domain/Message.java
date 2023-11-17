@@ -6,12 +6,18 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
     @Id
@@ -25,16 +31,17 @@ public class Message {
 
     private String messageContent;
 
-    @Temporal(TemporalType.DATE)
-    private LocalDate messageTime;
+    private String messageTime;
 
     public Message(Member member, String messageContent) {
         this.member=member;
         this.messageContent=messageContent;
-        this.messageTime=LocalDate.now();
+        LocalDateTime msgTime = LocalDateTime.now();
+        this.messageTime=msgTime.toString();
     }
     public void update(String msgContent){
         this.messageContent=msgContent;
-        this.messageTime=LocalDate.now();
+        LocalDateTime msgTime = LocalDateTime.now();
+        this.messageTime=msgTime.toString();
     }
 }
