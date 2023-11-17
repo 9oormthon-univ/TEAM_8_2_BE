@@ -1,5 +1,6 @@
 package com.example.clouddog.domain.board.api.dto;
 
+import com.example.clouddog.domain.comment.api.dto.CommentResDto;
 import com.example.clouddog.domain.comment.domain.Comment;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class BoardResDto {
     //private List<Comment> comments;
 
     public BoardResDto(Long bdId, String boardTitle, String boardPlace,
-                    String boardTime, int boardTag, String boardContent){ //, List<Comment> comments) {
+                    String boardTime, int boardTag, String boardContent){//, List<Comment> comments) {
         this.bdId=bdId;
         this.bdTitle=boardTitle;
         this.bdPlace=boardPlace;

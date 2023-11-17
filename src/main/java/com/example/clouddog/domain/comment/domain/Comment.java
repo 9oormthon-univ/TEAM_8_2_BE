@@ -36,7 +36,8 @@ public class Comment {
     @Temporal(TemporalType.DATE)
     private LocalDate commentTime;
 
-    public Comment(String commentContent, Long previousCmId, Board board){
+    public Comment(String commentContent, Long previousCmId, Board board, Member member){
+        this.member=member;
         this.board=board;
         this.commentContent=commentContent;
         this.previousCmId=previousCmId;
