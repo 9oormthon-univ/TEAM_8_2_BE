@@ -4,7 +4,6 @@ import com.example.clouddog.domain.board.api.dto.BoardDto;
 import com.example.clouddog.domain.board.api.dto.BoardReqDto;
 import com.example.clouddog.domain.board.api.dto.BoardResDto;
 import com.example.clouddog.domain.board.application.BoardService;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,21 +24,26 @@ public class BoardController {
 
     //페이징x
     //게시글 목록 불러오기 _ tag가 0이면 전체, 12345면 해당 목록
-    @GetMapping("/{memberId}/boards/{bdTag}")
-    public ResponseEntity<List<BoardDto>> board(@PathVariable(name = "memberId") Long memberId,
-                                                @PathVariable Integer bdTag) {
-        if (bdTag == 0) {
-            return new ResponseEntity<>(boardService.findAll(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(boardService.findAllByTag(bdTag), HttpStatus.OK);
-        }
-    }
+//    @GetMapping("/{memberId}/boards/{bdTag}")
+//    public ResponseEntity<List<BoardDto>> board(@PathVariable(name = "memberId") Long memberId,
+//                                                @PathVariable Integer bdTag) {
+//        if (bdTag == 0) {
+//            return new ResponseEntity<>(boardService.findAll(), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(boardService.findAllByTag(bdTag), HttpStatus.OK);
+//        }
+//    }
     //페이징 불러오기
-    @GetMapping("/{memberId}/boards")
+    @GetMapping("/{memberId}/boards/{bdTag}")
     public ResponseEntity<Page<BoardDto>> myScrapList(@PathVariable("memberId") Long memberId,
+                                                      @PathVariable int bdTag,
                                                       @RequestParam(value = "page", defaultValue = "0") int page,
                                                       @RequestParam(value = "size", defaultValue = "8") int size) {
-        return new ResponseEntity<>(boardService.findAllPage(memberId, page, size), HttpStatus.OK);
+        if (bdTag == 0) {
+            return new ResponseEntity<>(boardService.findAllPage(memberId, page, size), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(boardService.findByTagPage(memberId, bdTag, page, size), HttpStatus.OK);
+        }
     }
 
     //게시글 작성
