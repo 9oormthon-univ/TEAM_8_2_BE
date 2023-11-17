@@ -1,5 +1,7 @@
 package com.example.clouddog.domain.message.api;
 
+import com.example.clouddog.domain.message.api.dto.MessageReqDto;
+import com.example.clouddog.domain.message.api.dto.MessageResDto;
 import com.example.clouddog.domain.message.application.MessageService;
 import com.example.clouddog.domain.message.domain.Message;
 import lombok.extern.slf4j.Slf4j;
@@ -19,24 +21,29 @@ public class MessageController {
         this.messageService=messageService;
     }
 
-    @ResponseStatus(HttpStatus.OK)
+
+    //메시지 불러오기
     @GetMapping("/messages")
-    public List<Message> findAllMessages(){
-        return messageService.messageFind();
+    public ResponseEntity<List<MessageResDto>> findAllMessages(){
+
+        return new ResponseEntity<>(messageService.messageFind(), HttpStatus.OK);
     }
-    @ResponseStatus(HttpStatus.OK)
+
+    //메시지 작성
     @PostMapping("/messages")
-    public ResponseEntity<String> addMessage(@RequestBody MessageDto messageDto){
+    public ResponseEntity<String> addMessage(@RequestBody MessageReqDto messageDto){
         messageService.messageSave(messageDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
-    @ResponseStatus(HttpStatus.OK)
+
+    //메시지 수정
     @PatchMapping("/messages/{msgId}")
-    public ResponseEntity<String> updateMessage(@PathVariable Long msgId, @RequestBody MessageDto msgDto){
+    public ResponseEntity<String> updateMessage(@PathVariable Long msgId, @RequestBody MessageReqDto msgDto){
         messageService.messageUpdate(msgId, msgDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
-    @ResponseStatus(HttpStatus.OK)
+
+    //메시지 삭제
     @DeleteMapping("/messages/{msgId}")
     public ResponseEntity<String> deleteMessage(@PathVariable Long msgId){
         messageService.messageDelete(msgId);

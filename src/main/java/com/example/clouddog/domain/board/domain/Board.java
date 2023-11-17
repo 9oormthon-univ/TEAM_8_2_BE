@@ -1,12 +1,18 @@
 package com.example.clouddog.domain.board.domain;
 
+import com.example.clouddog.domain.comment.domain.Comment;
 import com.example.clouddog.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-import java.time.LocalDate;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,43 +23,40 @@ public class Board {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    //실패
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "boardId")
+//    private final List<Comment> comments=new ArrayList<>();
+
     private String boardTitle;
 
-    @Temporal(TemporalType.DATE)
-    private LocalDate boardTime;
+    private String boardTime;
 
     private String boardPlace;
 
-    private Integer boardTag;
+    private int boardTag;
 
     @Lob
     private String boardContent;
 
     private String boardImageUrl;
 
-    public Board() {
-    }
-
-    public Board(String boardTitle, String boardPlace,
-                 Integer boardTag, String boardContent) {
-        //this.member=member;
+    public Board(Member member, String boardTitle, String boardPlace,
+                 int boardTag, String boardContent, String boardTime) {
+        this.member=member;
         this.boardTitle=boardTitle;
         this.boardPlace=boardPlace;
         this.boardTag=boardTag;
         this.boardContent=boardContent;
-        this.boardTime=LocalDate.now();
+        this.boardTime=boardTime;
 
-        //member안에 list에 board추가.. 여기서 해야하나
     }
     public void update(String boardTitle, String boardPlace,
-                 Integer boardTag, String boardContent) {
-        //this.member=member;
+                 int boardTag, String boardContent, String boardTime) {
         this.boardTitle=boardTitle;
         this.boardPlace=boardPlace;
         this.boardTag=boardTag;
         this.boardContent=boardContent;
-        this.boardTime=LocalDate.now();
+        this.boardTime=boardTime;
 
-        //member안에 list에 board추가.. 여기서 해야하나
     }
 }

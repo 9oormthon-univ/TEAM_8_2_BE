@@ -3,12 +3,16 @@ package com.example.clouddog.domain.message.domain;
 
 import com.example.clouddog.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +27,6 @@ public class Message {
 
     @Temporal(TemporalType.DATE)
     private LocalDate messageTime;
-
-    public Message() {
-    }
 
     public Message(String messageContent) {
         this.messageContent=messageContent;

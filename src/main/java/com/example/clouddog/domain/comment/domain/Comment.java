@@ -3,12 +3,16 @@ package com.example.clouddog.domain.comment.domain;
 import com.example.clouddog.domain.board.domain.Board;
 import com.example.clouddog.member.domain.Member;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,44 +31,28 @@ public class Comment {
 
     private String commentContent;
 
-    private Integer commentLikes;
+    private int commentLikes;
 
     @Temporal(TemporalType.DATE)
     private LocalDate commentTime;
 
-    public Comment() {
-    }
-
-    public Comment(String commentContent, Integer commentLikes, Long previousCmId){
+    public Comment(String commentContent, Long previousCmId, Board board){
+        this.board=board;
         this.commentContent=commentContent;
         this.previousCmId=previousCmId;
-        if (commentLikes==null)
-            this.commentLikes=0;
-        else this.commentLikes=commentLikes;
+        this.commentLikes=0;
         this.commentTime=LocalDate.now();
     }
-    public void update(Long previousCmId, String commentContent, Integer commentLikes){
-        this.previousCmId=previousCmId;
+    public void update(String commentContent){
         this.commentContent=commentContent;
-        this.commentLikes=commentLikes;
         this.commentTime=LocalDate.now();
-    }
-
-    public void setPreviousCmId(Long previousCmId) {
-        this.previousCmId = previousCmId;
-    }
-
-    public void setBoard(Board board) {
-        this.board = board;
     }
 
     public void addLikes(){
-        if (commentLikes!=null){
-            commentLikes+=1;
-        }
+        commentLikes+=1;
     }
     public void subLikes(){
-        if (commentLikes!=null &&commentLikes>0){
+        if (commentLikes>0){
             commentLikes-=1;
         }
     }

@@ -1,6 +1,7 @@
 package com.example.clouddog.domain.message.application;
 
-import com.example.clouddog.domain.message.api.MessageDto;
+import com.example.clouddog.domain.message.api.dto.MessageReqDto;
+import com.example.clouddog.domain.message.api.dto.MessageResDto;
 import com.example.clouddog.domain.message.domain.Message;
 import com.example.clouddog.domain.message.domain.repository.MessageRepository;
 import com.example.clouddog.domain.message.exception.NotFoundMessageException;
@@ -19,20 +20,28 @@ public class MessageService {
         this.messageRepository=messageRepository;
     }
 
-//페이징x 확인용
-    public List<Message> messageFind(){
-        return new ArrayList<>(messageRepository.findAll());
+    //메시지 전부 불러오기
+    public List<MessageResDto> messageFind(){
+        List<MessageResDto> returnList = new ArrayList<>();
+        for (Message message: messageRepository.findAll()) {
+            MessageResDto messageDto = new MessageResDto(
+                    message.getMessageId(),
+                    message.getMessageContent(),
+                    message.getMessageTime()
+            );
+            returnList.add(messageDto);
+        }
+        return returnList;
     }
 
     //메세지 등록
-    public void messageSave(MessageDto messageDto){
+    public void messageSave(MessageReqDto messageDto){
         Message message = new Message(messageDto.getMsgContent());
         messageRepository.save(message);
     }
     //메세지 수정
-    public void messageUpdate(Long msgId, MessageDto updateMsg){
-        Message message = messageRepository.findById(msgId).orElseThrow(NotFoundMessageException::new);
-        message.update(updateMsg.getMsgContent());
+    public void messageUpdate(Long msgId, MessageReqDto updateMsg){
+        messageRepository.findById(msgId).orElseThrow(NotFoundMessageException::new).update(updateMsg.getMsgContent());
     }
     //메세지 삭제
     public void messageDelete(Long msgId){
