@@ -3,14 +3,13 @@ package com.example.clouddog.member.application;
 import com.example.clouddog.member.api.dto.request.FriendSaveReqDto;
 import com.example.clouddog.member.api.dto.request.MemberProfileUpdateReqDto;
 import com.example.clouddog.member.api.dto.respnse.MemberResDto;
-import com.example.clouddog.member.api.dto.respnse.MembersResDto;
 import com.example.clouddog.member.domain.Friendship;
 import com.example.clouddog.member.domain.Member;
 import com.example.clouddog.member.domain.repository.FriendsRepository;
 import com.example.clouddog.member.domain.repository.MemberRepository;
 import com.example.clouddog.member.exception.ExistsFriendShipException;
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,6 @@ public class MemberService {
     }
 
     // 메인에서 멤버(본인) 응답 -> 어차피 헤더에 엑세스토큰이 들어오므로 토큰에서 검증 후 이메일로 멤버 찾아서 반환하는 로직임.
-    // 친구 찾기
     public MemberResDto memberInfo(String email) {
         return MemberResDto.of(memberRepository.findByEmail(email).orElseThrow());
     }
@@ -61,14 +59,11 @@ public class MemberService {
     }
 
     // 친구 목록
-    public MembersResDto friendsInfoList(Long memberId) {
+    public Page<MemberResDto> friendsInfoList(Long memberId, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow();
 
-        List<MemberResDto> memberResDtos = new ArrayList<>();
-        for (Friendship byFriend : friendsRepository.findByMember(member)) {
-            memberResDtos.add(MemberResDto.of(byFriend.getFriend()));
-        }
+        Page<Friendship> friendships = friendsRepository.findByMember(member, PageRequest.of(page, size));
 
-        return MembersResDto.of(memberResDtos);
+        return friendships.map(friendship -> MemberResDto.of(friendship.getMember()));
     }
 }

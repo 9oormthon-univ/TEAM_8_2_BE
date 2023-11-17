@@ -17,15 +17,15 @@ public class BoardReqDto {
 
     private String bdTime;
 
-    private String bdImageUrl;
+    private Long imageId;
 
     public BoardReqDto(String boardTitle, String boardPlace,
-                       int boardTag, String boardContent, String boardTime) {
+                       int boardTag, String boardContent, String boardTime, Long imageId) {
         this.bdTitle = boardTitle;
         this.bdPlace = boardPlace;
         this.bdTag = boardTag;
         this.bdContent = boardContent;
         this.bdTime = boardTime;
-        //나중에 이미지 추가
+        this.imageId = imageId;
     }
 }
