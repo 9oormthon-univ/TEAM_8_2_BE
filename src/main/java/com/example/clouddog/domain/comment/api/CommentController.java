@@ -21,6 +21,7 @@ public class CommentController {
     }
 
 
+
     //댓글 불러오기 -> 보드에서 불러오기로=>실패
     @GetMapping("/comments/{bdId}")
     public ResponseEntity<List<CommentResDto>> comments(@PathVariable Long bdId){
