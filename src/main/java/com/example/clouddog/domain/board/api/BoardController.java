@@ -21,18 +21,6 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-
-    //페이징x
-    //게시글 목록 불러오기 _ tag가 0이면 전체, 12345면 해당 목록
-//    @GetMapping("/{memberId}/boards/{bdTag}")
-//    public ResponseEntity<List<BoardDto>> board(@PathVariable(name = "memberId") Long memberId,
-//                                                @PathVariable Integer bdTag) {
-//        if (bdTag == 0) {
-//            return new ResponseEntity<>(boardService.findAll(), HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(boardService.findAllByTag(bdTag), HttpStatus.OK);
-//        }
-//    }
     //페이징 불러오기
     @GetMapping("/{memberId}/boards/{bdTag}")
     public ResponseEntity<Page<BoardDto>> myScrapList(@PathVariable("memberId") Long memberId,
