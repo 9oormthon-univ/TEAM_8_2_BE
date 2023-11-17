@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Getter
@@ -15,9 +17,9 @@ public class MessageResDto {
 
     private String msgContent;
 
-    private LocalDate msgTime;
+    private String msgTime;
 
-    public MessageResDto(Long msgId, String msgContent, LocalDate msgTime) {
+    public MessageResDto(Long msgId, String msgContent, String msgTime) {
         this.msgId=msgId;
         this.msgTime=msgTime;
         this.msgContent=msgContent;
