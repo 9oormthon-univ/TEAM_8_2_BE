@@ -70,7 +70,7 @@ public class ImageService {
     @Transactional
     public void delete(Image image) {
         amazonS3.deleteObject(bucket, image.getConvertImageName());
-        imageRepository.deleteById(image.getId());
+//        imageRepository.deleteById(image.getId());
     }
 
     private void uploadToBucket(String fileName, InputStream inputStream,
@@ -93,7 +93,7 @@ public class ImageService {
                 .convertImageName(fileName.substring(fileName.lastIndexOf("/") + 1))
                 .build();
     }
-    
+
     private String createFileName(String fileName) {
         return UUID.randomUUID() + "_" + fileName;
     }

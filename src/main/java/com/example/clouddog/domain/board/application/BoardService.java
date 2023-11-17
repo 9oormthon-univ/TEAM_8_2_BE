@@ -8,10 +8,11 @@ import com.example.clouddog.domain.board.domain.repository.BoardRepository;
 import com.example.clouddog.domain.board.exception.NotFoundBoardException;
 import com.example.clouddog.domain.board.exception.NotFoundMemberException;
 import com.example.clouddog.domain.comment.domain.repository.CommentRepository;
+import com.example.clouddog.image.domain.Image;
+import com.example.clouddog.image.domain.repository.ImageRepository;
 import com.example.clouddog.member.domain.Member;
 import com.example.clouddog.member.domain.repository.MemberRepository;
 import jakarta.transaction.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -24,20 +25,24 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class BoardService {
-
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
+    private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
 
-    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository, CommentRepository commentRepository) {
+    public BoardService(BoardRepository boardRepository, MemberRepository memberRepository,
+                        CommentRepository commentRepository,
+                        ImageRepository imageRepository) {
         this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
         this.commentRepository = commentRepository;
+        this.imageRepository = imageRepository;
     }
 
     // 게시글 저장
     public void boardSave(Long memberId, BoardReqDto boardDto) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+        Image image = imageRepository.findById(boardDto.getImageId()).orElseThrow();
 
         Board board = new Board(
                 member,
@@ -45,7 +50,8 @@ public class BoardService {
                 boardDto.getBdPlace(),
                 boardDto.getBdTag(),
                 boardDto.getBdContent(),
-                boardDto.getBdTime()
+                boardDto.getBdTime(),
+                image
         );
 
         boardRepository.save(board);
@@ -83,19 +89,20 @@ public class BoardService {
         }
         return returnList;
     }
-   public Page<BoardDto> findAllPage(Long memberId, int page, int size){
+
+    public Page<BoardDto> findAllPage(Long memberId, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
         Page<Board> boardListPage;
-       boardListPage = boardRepository.findByMember(member,
-               PageRequest.of(page, size, Sort.by(Sort.Direction.ASC,"boardId")));
-       return boardListPage.map(m -> new BoardDto(
-               m.getBoardId(),
-               m.getMember().getMemberId(),
-               m.getBoardTitle(),
-               m.getBoardTag()
-       ));
-   }
+        boardListPage = boardRepository.findByMember(member,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "boardId")));
+        return boardListPage.map(m -> new BoardDto(
+                m.getBoardId(),
+                m.getMember().getMemberId(),
+                m.getBoardTitle(),
+                m.getBoardTag()
+        ));
+    }
 
     // 같은 태그의 게시글 불러오기
     public List<BoardDto> findAllByTag(Integer bdTag) {
