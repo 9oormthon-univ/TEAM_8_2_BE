@@ -3,6 +3,7 @@ package com.example.clouddog.board.domain;
 import com.example.clouddog.board.api.dto.BoardReqDto;
 import com.example.clouddog.comment.domain.Comment;
 import com.example.clouddog.image.domain.Image;
+import com.example.clouddog.member.domain.MemberWriteBoard;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,12 +41,11 @@ public class Board {
     @Lob
     private String boardContent;
 
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "member_id")
-//    private Member member;
-
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberWriteBoard> memberWriteBoards = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "image_id")

@@ -42,11 +42,10 @@ public class BoardService {
     // 게시글 저장
     @Transactional
     public void boardSave(Long memberId, BoardReqDto boardDto) {
-        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+        Member member = memberRepository.findById(memberId).orElseThrow();
         Image image = imageRepository.findById(boardDto.getImageId()).orElseThrow(NotFoundBoardException::new);
 
         Board board = new Board(
-//                member,
                 boardDto.getBdTitle(),
                 boardDto.getBdPlace(),
                 boardDto.getBdTag(),
@@ -55,6 +54,7 @@ public class BoardService {
                 image
         );
 
+        member.addBoards(board);
         boardRepository.save(board);
     }
 

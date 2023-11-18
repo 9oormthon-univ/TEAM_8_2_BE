@@ -2,6 +2,7 @@ package com.example.clouddog.message.domain;
 
 
 import com.example.clouddog.member.domain.Member;
+import com.example.clouddog.message.api.dto.MessageReqDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -41,8 +42,8 @@ public class Message {
         this.messageTime = msgTime.toString();
     }
 
-    public void update(String msgContent) {
-        this.messageContent = msgContent;
+    public void update(MessageReqDto messageReqDto) {
+        this.messageContent = messageReqDto.getMsgContent();
         LocalDateTime msgTime = LocalDateTime.now();
         this.messageTime = msgTime.toString();
     }

@@ -65,6 +65,9 @@ public class Member implements UserDetails {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberWriteBoard> memberWriteBoards = new ArrayList<>();
+
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friendship> friends = new ArrayList<>();
 
@@ -131,6 +134,11 @@ public class Member implements UserDetails {
     public void addComments(Board board, String cmContent, Long previousCommentId) {
         Comment comment = new Comment(this, board, cmContent, previousCommentId);
         this.comments.add(comment);
+    }
+
+    public void addBoards(Board board) {
+        MemberWriteBoard memberWriteBoard = new MemberWriteBoard(this, board);
+        this.memberWriteBoards.add(memberWriteBoard);
     }
 
 }
