@@ -7,6 +7,7 @@ import com.example.clouddog.member.domain.Friendship;
 import com.example.clouddog.member.domain.Member;
 import com.example.clouddog.member.domain.repository.FriendsRepository;
 import com.example.clouddog.member.domain.repository.MemberRepository;
+import com.example.clouddog.member.exception.EqualMemberAndFriendException;
 import com.example.clouddog.member.exception.ExistsFriendShipException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,8 +26,8 @@ public class MemberService {
     }
 
     // 메인에서 멤버(본인) 응답 -> 어차피 헤더에 엑세스토큰이 들어오므로 토큰에서 검증 후 이메일로 멤버 찾아서 반환하는 로직임.
-    public MemberResDto memberInfo(String email) {
-        return MemberResDto.of(memberRepository.findByEmail(email).orElseThrow());
+    public MemberResDto memberInfo(String uid) {
+        return MemberResDto.of(memberRepository.findByMemberName(uid).orElseThrow());
     }
 
     // 멤버 프로필 저장, 업데이트.
@@ -43,18 +44,25 @@ public class MemberService {
 
     // 친구 추가
     @Transactional
-    public void addFriend(FriendSaveReqDto friendSaveReqDto) {
-        Member member = memberRepository.findById(friendSaveReqDto.memberId()).orElseThrow();
+    public void addFriend(Long memberId, FriendSaveReqDto friendSaveReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
         Member friend = memberRepository.findByEmail(friendSaveReqDto.friendEmail()).orElseThrow();
 
+        validateEqualMemberAndFriend(member, friend);
         validateDuplicationFriendship(member, friend);
 
         friendsRepository.save(Friendship.of(member, friend));
     }
 
+    private void validateEqualMemberAndFriend(Member member, Member friend) {
+        if (member.equals(friend)) {
+            throw new EqualMemberAndFriendException(member, friend);
+        }
+    }
+
     private void validateDuplicationFriendship(Member member, Member friend) {
         if (friendsRepository.existsByMemberAndFriend(member, friend)) {
-            throw new ExistsFriendShipException();
+            throw new ExistsFriendShipException(member, friend);
         }
     }
 
@@ -64,6 +72,6 @@ public class MemberService {
 
         Page<Friendship> friendships = friendsRepository.findByMember(member, PageRequest.of(page, size));
 
-        return friendships.map(friendship -> MemberResDto.of(friendship.getMember()));
+        return friendships.map(friendship -> MemberResDto.of(friendship.getFriend()));
     }
 }

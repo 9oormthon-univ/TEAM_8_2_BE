@@ -1,5 +1,7 @@
 package com.example.clouddog.member.domain;
 
+import com.example.clouddog.board.domain.Board;
+import com.example.clouddog.comment.domain.Comment;
 import com.example.clouddog.member.api.dto.request.MemberProfileUpdateReqDto;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.CascadeType;
@@ -56,6 +58,12 @@ public class Member implements UserDetails {
     private String petDescription;
 
     private int mindCount;
+
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friendship> friends = new ArrayList<>();
@@ -119,4 +127,10 @@ public class Member implements UserDetails {
         this.petDescription = memberProfileUpdateReqDto.petDescription();
         this.mindCount = memberProfileUpdateReqDto.mindCount();
     }
+
+    public void addComments(Board board, String cmContent, Long previousCommentId) {
+        Comment comment = new Comment(this, board, cmContent, previousCommentId);
+        this.comments.add(comment);
+    }
+
 }
