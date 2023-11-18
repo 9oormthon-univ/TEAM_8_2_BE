@@ -1,10 +1,11 @@
-package com.example.clouddog.comment.api.dto;
+package com.example.clouddog.comment.application;
 
 import com.example.clouddog.board.domain.Board;
 import com.example.clouddog.board.domain.repository.BoardRepository;
 import com.example.clouddog.board.exception.NotFoundBoardException;
 import com.example.clouddog.board.exception.NotFoundMemberException;
-import com.example.clouddog.comment.application.CommentSaveReqDto;
+import com.example.clouddog.comment.api.dto.request.CommentSaveReqDto;
+import com.example.clouddog.comment.api.dto.request.CommentUpdateReqDto;
 import com.example.clouddog.comment.domain.repository.CommentRepository;
 import com.example.clouddog.comment.exception.NotFoundCommentException;
 import com.example.clouddog.member.domain.Member;

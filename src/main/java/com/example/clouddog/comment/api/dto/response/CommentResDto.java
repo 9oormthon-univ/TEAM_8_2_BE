@@ -1,4 +1,4 @@
-package com.example.clouddog.comment.api.dto;
+package com.example.clouddog.comment.api.dto.response;
 
 import com.example.clouddog.comment.domain.Comment;
 import java.time.LocalDate;

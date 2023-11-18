@@ -1,4 +1,4 @@
-package com.example.clouddog.board.api.dto;
+package com.example.clouddog.board.api.dto.request;
 
 import lombok.AccessLevel;
 import lombok.Getter;

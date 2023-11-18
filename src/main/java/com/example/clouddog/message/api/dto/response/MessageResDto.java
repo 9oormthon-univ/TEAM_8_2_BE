@@ -1,4 +1,4 @@
-package com.example.clouddog.message.api.dto;
+package com.example.clouddog.message.api.dto.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

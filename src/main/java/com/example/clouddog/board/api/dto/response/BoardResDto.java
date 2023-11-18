@@ -1,7 +1,7 @@
-package com.example.clouddog.board.api.dto;
+package com.example.clouddog.board.api.dto.response;
 
 import com.example.clouddog.board.domain.Board;
-import com.example.clouddog.comment.api.dto.CommentResDto;
+import com.example.clouddog.comment.api.dto.response.CommentResDto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;

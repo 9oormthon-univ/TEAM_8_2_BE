@@ -2,7 +2,7 @@ package com.example.clouddog.message.domain;
 
 
 import com.example.clouddog.member.domain.Member;
-import com.example.clouddog.message.api.dto.MessageReqDto;
+import com.example.clouddog.message.api.dto.request.MessageReqDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

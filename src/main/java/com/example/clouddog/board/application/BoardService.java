@@ -1,13 +1,13 @@
 package com.example.clouddog.board.application;
 
-import com.example.clouddog.board.api.dto.BoardDto;
-import com.example.clouddog.board.api.dto.BoardReqDto;
-import com.example.clouddog.board.api.dto.BoardResDto;
+import com.example.clouddog.board.api.dto.request.BoardReqDto;
+import com.example.clouddog.board.api.dto.response.BoardListResDto;
+import com.example.clouddog.board.api.dto.response.BoardResDto;
 import com.example.clouddog.board.domain.Board;
 import com.example.clouddog.board.domain.repository.BoardRepository;
 import com.example.clouddog.board.exception.NotFoundBoardException;
 import com.example.clouddog.board.exception.NotFoundMemberException;
-import com.example.clouddog.comment.api.dto.CommentResDto;
+import com.example.clouddog.comment.api.dto.response.CommentResDto;
 import com.example.clouddog.comment.domain.Comment;
 import com.example.clouddog.image.domain.Image;
 import com.example.clouddog.image.domain.repository.ImageRepository;
@@ -17,14 +17,12 @@ import com.example.clouddog.member.domain.repository.MemberRepository;
 import com.example.clouddog.member.domain.repository.MemberWriteBoardRepository;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 public class BoardService {
@@ -63,10 +61,9 @@ public class BoardService {
 
         member.addBoards(board);
         boardRepository.save(board);
-
     }
 
-    // 게시글 상세보기_1개 자세히 불러오기 -> 여기서 member.boards 프록시 문제
+    // 게시글 상세보기_1개 자세히 불러오기
     public BoardResDto findById(Long memberId, Long boardId) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
         Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
@@ -79,34 +76,42 @@ public class BoardService {
         return BoardResDto.of(board, comments);
     }
 
-    public Page<BoardDto> findAllPage(Long memberId, int page, int size) {
+    public Page<BoardListResDto> findAllPage(Long memberId, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
         Page<MemberWriteBoard> boardListPage = memberWriteBoardRepository.findByMember(member,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberWriteBoardId")));
 
-        return boardListPage.map(m -> new BoardDto(
-                m.getBoard().getBoardId(),
-                m.getMember().getMemberId(),
-                m.getBoard().getBoardTitle(),
-                m.getTag(),
-                m.getBoard().getImage().getImageUrl()
-        ));
+        return boardListPage.map(this::boardListMap);
     }
 
-    public Page<BoardDto> findByTagPage(Long memberId, int tag, int page, int size) {
+    public Page<BoardListResDto> findByTagPage(Long memberId, int tag, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
         Page<MemberWriteBoard> boardListPage = memberWriteBoardRepository.findByMemberAndTag(member, tag,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberWriteBoardId")));
 
-        return boardListPage.map(m -> new BoardDto(
-                m.getBoard().getBoardId(),
-                m.getMember().getMemberId(),
-                m.getBoard().getBoardTitle(),
-                m.getBoard().getBoardTag(),
-                m.getBoard().getImage().getImageUrl()
-        ));
+        return boardListPage.map(this::boardListMap);
+    }
+
+    private BoardListResDto boardListMap(MemberWriteBoard memberWriteBoard) {
+        if (memberWriteBoard.getBoard().getImage() != null) {
+            return new BoardListResDto(
+                    memberWriteBoard.getBoard().getBoardId(),
+                    memberWriteBoard.getMember().getMemberId(),
+                    memberWriteBoard.getBoard().getBoardTitle(),
+                    memberWriteBoard.getTag(),
+                    memberWriteBoard.getBoard().getImage().getImageUrl()
+            );
+        } else {
+            return new BoardListResDto(
+                    memberWriteBoard.getBoard().getBoardId(),
+                    memberWriteBoard.getMember().getMemberId(),
+                    memberWriteBoard.getBoard().getBoardTitle(),
+                    memberWriteBoard.getTag(),
+                    null
+            );
+        }
     }
 
     // 게시글 수정
