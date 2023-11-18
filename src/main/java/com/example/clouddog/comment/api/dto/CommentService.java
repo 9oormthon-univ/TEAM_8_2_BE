@@ -1,10 +1,10 @@
-package com.example.clouddog.comment.application;
+package com.example.clouddog.comment.api.dto;
 
 import com.example.clouddog.board.domain.Board;
 import com.example.clouddog.board.domain.repository.BoardRepository;
 import com.example.clouddog.board.exception.NotFoundBoardException;
 import com.example.clouddog.board.exception.NotFoundMemberException;
-import com.example.clouddog.comment.api.dto.CommentReqDto;
+import com.example.clouddog.comment.application.CommentSaveReqDto;
 import com.example.clouddog.comment.domain.repository.CommentRepository;
 import com.example.clouddog.comment.exception.NotFoundCommentException;
 import com.example.clouddog.member.domain.Member;
@@ -31,22 +31,12 @@ public class CommentService {
     }
 
     // 댓글 저장
-    public void commentSave(Long boardId, CommentReqDto commentDto) {
+    public void commentSave(Long memberId, Long boardId, CommentSaveReqDto commentSaveReqDto) {
         Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
-        Member member = memberRepository.findById(commentDto.getMemberId()).orElseThrow(NotFoundMemberException::new);
-//
-//        Comment comment = new Comment(
-//                member,
-//                board,
-//                commentDto.getCmContent(),
-//                commentDto.getPreviousCommentId()
-//        );
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
-        member.addComments(board, commentDto.getCmContent(), commentDto.getPreviousCommentId());
+        member.addComments(board, commentSaveReqDto.getCmContent(), commentSaveReqDto.getPreciousCommentId());
         memberRepository.save(member);
-//        commentRepository.save(comment);
-        //실패
-        //boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new).getComments().add(comment);
     }
 
     //댓글 좋아요 추가
@@ -60,7 +50,7 @@ public class CommentService {
     }
 
     //댓글 수정
-    public void commentUpdate(Long cmId, CommentReqDto updateCm) {
+    public void commentUpdate(Long cmId, CommentUpdateReqDto updateCm) {
         commentRepository.findById(cmId).orElseThrow(NotFoundCommentException::new).update(
                 updateCm.getCmContent()
         );
