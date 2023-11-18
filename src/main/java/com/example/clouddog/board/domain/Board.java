@@ -39,7 +39,6 @@ public class Board {
 
     private int boardTag;
 
-    @Lob
     private String boardContent;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
