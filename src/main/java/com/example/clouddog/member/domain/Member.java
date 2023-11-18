@@ -59,9 +59,6 @@ public class Member implements UserDetails {
 
     private int mindCount;
 
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Board> boards = new ArrayList<>();
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
@@ -128,7 +125,7 @@ public class Member implements UserDetails {
         this.petNumber = memberProfileUpdateReqDto.petNumber();
         this.petName = memberProfileUpdateReqDto.petName();
         this.petDescription = memberProfileUpdateReqDto.petDescription();
-        this.mindCount = memberProfileUpdateReqDto.mindCount();
+        this.mindCount = memberProfileUpdateReqDto.mindCount() * 30;
     }
 
     public void addComments(Board board, String cmContent, Long previousCommentId) {

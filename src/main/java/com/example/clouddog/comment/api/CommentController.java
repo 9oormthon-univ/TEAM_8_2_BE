@@ -1,7 +1,8 @@
 package com.example.clouddog.comment.api;
 
-import com.example.clouddog.comment.api.dto.CommentReqDto;
-import com.example.clouddog.comment.application.CommentService;
+import com.example.clouddog.comment.api.dto.CommentService;
+import com.example.clouddog.comment.api.dto.CommentUpdateReqDto;
+import com.example.clouddog.comment.application.CommentSaveReqDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +28,15 @@ public class CommentController {
     //댓글 작성
     @PostMapping("/{memberId}/comments/{bdId}")
     public ResponseEntity<String> addComment(@PathVariable Long memberId, @PathVariable Long bdId,
-                                             @RequestBody CommentReqDto commentDto) {
-        commentService.commentSave(bdId, commentDto);
+                                             @RequestBody CommentSaveReqDto commentDto) {
+        commentService.commentSave(memberId, bdId, commentDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
     //댓글 수정
     @PatchMapping("/{memberId}/comments/{cmId}")
     public ResponseEntity<String> updateComment(@PathVariable Long memberId, @PathVariable Long cmId,
-                                                @RequestBody CommentReqDto commentDto) {
+                                                @RequestBody CommentUpdateReqDto commentDto) {
         commentService.commentUpdate(cmId, commentDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
