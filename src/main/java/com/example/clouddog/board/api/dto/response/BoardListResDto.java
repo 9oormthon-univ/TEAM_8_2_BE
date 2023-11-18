@@ -13,11 +13,11 @@ public class BoardListResDto {
     private int bdTag;
     private String bdImageUrl;
 
-    public BoardListResDto(Long bdId, Long memberId, String boardTitle, int boardTag, String bdImageUrl) {
+    public BoardListResDto(Long memberId, Long bdId, String bdTitle, int bdTag, String bdImageUrl) {
         this.memberId = memberId;
         this.bdId = bdId;
-        this.bdTitle = boardTitle;
-        this.bdTag = boardTag;
+        this.bdTitle = bdTitle;
+        this.bdTag = bdTag;
         this.bdImageUrl = bdImageUrl;
     }
 
