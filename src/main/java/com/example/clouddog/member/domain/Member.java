@@ -138,4 +138,15 @@ public class Member implements UserDetails {
         this.memberWriteBoards.add(memberWriteBoard);
     }
 
+    public void deleteBoards(Board board) {
+        MemberWriteBoard memberWriteBoard = findWriteBoard(board);
+        this.memberWriteBoards.remove(memberWriteBoard);
+    }
+
+    private MemberWriteBoard findWriteBoard(Board board) {
+        return memberWriteBoards.stream()
+                .filter(memberWriteBoard -> memberWriteBoard.getBoard().equals(board))
+                .findFirst()
+                .orElse(null);
+    }
 }

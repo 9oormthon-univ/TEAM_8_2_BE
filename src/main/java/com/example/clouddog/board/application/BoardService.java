@@ -106,25 +106,25 @@ public class BoardService {
                 m.getBoard().getBoardId(),
                 m.getMember().getMemberId(),
                 m.getBoard().getBoardTitle(),
-                m.getTag()
+                m.getTag(),
+                m.getBoard().getImage()
         ));
     }
 
     public Page<BoardDto> findByTagPage(Long memberId, int tag, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
-        Page<Board> boardListPage;
-//        boardListPage = boardRepository.findByTag(member, tag,
-//                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "boardId")));
+        Page<MemberWriteBoard> boardListPage;
+        boardListPage = memberWriteBoardRepository.findByMemberAndTag(member, tag,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberWriteBoardId")));
 
-        return null;
-//        return boardListPage.map(m -> new BoardDto(
-//                m.getBoardId(),
-//                m.getMember().getMemberId(),
-//                m.getBoardTitle(),
-//                m.getBoardTag()
-        //이미지 추가
-//        ));
+        return boardListPage.map(m -> new BoardDto(
+                m.getBoard().getBoardId(),
+                m.getMember().getMemberId(),
+                m.getBoard().getBoardTitle(),
+                m.getBoard().getBoardTag(),
+                m.getBoard().getImage()
+        ));
     }
 
     // 게시글 수정
@@ -135,7 +135,11 @@ public class BoardService {
 
     //게시글 삭제
     @Transactional
-    public void boardDelete(Long bdId) {
-        boardRepository.deleteById(bdId);
+    public void boardDelete(Long memberId, Long bdId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+        Board board = boardRepository.findById(bdId).orElseThrow(NotFoundBoardException::new);
+
+        member.deleteBoards(board);
+        memberRepository.save(member);
     }
 }

@@ -69,7 +69,7 @@ public class BoardController {
     //게시글 삭제
     @DeleteMapping("/{memberId}/board/{bdId}")
     public ResponseEntity<String> deleteBoard(@PathVariable(name = "memberId") Long memberId, @PathVariable Long bdId) {
-        boardService.boardDelete(bdId);
+        boardService.boardDelete(memberId, bdId);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
