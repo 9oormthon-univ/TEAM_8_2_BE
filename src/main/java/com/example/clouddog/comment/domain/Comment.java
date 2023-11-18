@@ -2,6 +2,7 @@ package com.example.clouddog.comment.domain;
 
 import com.example.clouddog.board.domain.Board;
 import com.example.clouddog.member.domain.Member;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,15 +10,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
     @Id
@@ -42,6 +46,9 @@ public class Comment {
     @JoinColumn(name = "board_id")
     private Board board;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeComment> likeComments = new ArrayList<>();
+
     public Comment(Member member, Board board, String commentContent, Long previousCmId) {
         this.member = member;
         this.board = board;
@@ -56,13 +63,24 @@ public class Comment {
         this.commentTime = LocalDate.now();
     }
 
-    public void addLikes() {
+    public void addLikes(Member member) {
+        LikeComment likeComment = new LikeComment(member, this);
+        likeComments.add(likeComment);
         commentLikes += 1;
     }
 
-    public void subLikes() {
+    public void subLikes(Member member) {
+        LikeComment likeComment = findLikeComment(member);
+        likeComments.remove(likeComment);
         if (commentLikes > 0) {
             commentLikes -= 1;
         }
+    }
+
+    private LikeComment findLikeComment(Member member) {
+        return likeComments.stream()
+                .filter(likeComment -> likeComment.getMember().equals(member))
+                .findFirst()
+                .orElse(null);
     }
 }

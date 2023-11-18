@@ -4,9 +4,12 @@ import com.example.clouddog.board.domain.Board;
 import com.example.clouddog.board.domain.repository.BoardRepository;
 import com.example.clouddog.board.exception.NotFoundBoardException;
 import com.example.clouddog.board.exception.NotFoundMemberException;
+import com.example.clouddog.comment.api.dto.LikeCommentDto;
 import com.example.clouddog.comment.api.dto.request.CommentSaveReqDto;
 import com.example.clouddog.comment.api.dto.request.CommentUpdateReqDto;
+import com.example.clouddog.comment.domain.Comment;
 import com.example.clouddog.comment.domain.repository.CommentRepository;
+import com.example.clouddog.comment.domain.repository.LikeCommentRepository;
 import com.example.clouddog.comment.exception.NotFoundCommentException;
 import com.example.clouddog.member.domain.Member;
 import com.example.clouddog.member.domain.repository.MemberRepository;
@@ -24,11 +27,14 @@ public class CommentService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
 
+    private final LikeCommentRepository likeCommentRepository;
+
     public CommentService(CommentRepository commentRepository, BoardRepository boardRepository,
-                          MemberRepository memberRepository) {
+                          MemberRepository memberRepository, LikeCommentRepository likeCommentRepository) {
         this.commentRepository = commentRepository;
         this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
+        this.likeCommentRepository = likeCommentRepository;
     }
 
     // 댓글 저장
@@ -41,13 +47,32 @@ public class CommentService {
     }
 
     //댓글 좋아요 추가
-    public void addCmLikes(Long cmId) {
-        commentRepository.findById(cmId).orElseThrow(NotFoundCommentException::new).addLikes();
+    @Transactional
+    public void addCmLikes(Long cmId, LikeCommentDto likeCommentDto) {
+        Member member = memberRepository.findById(likeCommentDto.getMemberId())
+                .orElseThrow(NotFoundMemberException::new);
+        Comment comment = commentRepository.findById(cmId).orElseThrow(NotFoundCommentException::new);
+
+        if (likeCommentRepository.existsByMemberAndComment(member, comment)) {
+            throw new IllegalArgumentException();
+        }
+
+        comment.addLikes(member);
+        commentRepository.save(comment);
     }
 
     //댓글 좋아요 취소
-    public void subCmLikes(Long cmId) {
-        commentRepository.findById(cmId).orElseThrow(NotFoundCommentException::new).subLikes();
+    public void subCmLikes(Long cmId, LikeCommentDto likeCommentDto) {
+        Member member = memberRepository.findById(likeCommentDto.getMemberId())
+                .orElseThrow(NotFoundMemberException::new);
+        Comment comment = commentRepository.findById(cmId).orElseThrow(NotFoundCommentException::new);
+
+        if (!likeCommentRepository.existsByMemberAndComment(member, comment)) {
+            throw new IllegalArgumentException();
+        }
+
+        comment.subLikes(member);
+        commentRepository.save(comment);
     }
 
     //댓글 수정
