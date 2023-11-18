@@ -1,8 +1,8 @@
 package com.example.clouddog.comment.api;
 
-import com.example.clouddog.comment.api.dto.CommentService;
-import com.example.clouddog.comment.api.dto.CommentUpdateReqDto;
-import com.example.clouddog.comment.application.CommentSaveReqDto;
+import com.example.clouddog.comment.api.dto.request.CommentSaveReqDto;
+import com.example.clouddog.comment.api.dto.request.CommentUpdateReqDto;
+import com.example.clouddog.comment.application.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

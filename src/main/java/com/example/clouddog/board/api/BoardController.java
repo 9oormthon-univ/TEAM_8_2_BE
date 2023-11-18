@@ -1,8 +1,8 @@
 package com.example.clouddog.board.api;
 
-import com.example.clouddog.board.api.dto.BoardDto;
-import com.example.clouddog.board.api.dto.BoardReqDto;
-import com.example.clouddog.board.api.dto.BoardResDto;
+import com.example.clouddog.board.api.dto.request.BoardReqDto;
+import com.example.clouddog.board.api.dto.response.BoardListResDto;
+import com.example.clouddog.board.api.dto.response.BoardResDto;
 import com.example.clouddog.board.application.BoardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -31,10 +31,10 @@ public class BoardController {
 
     //페이징 불러오기
     @GetMapping("/{memberId}/boards/{bdTag}")
-    public ResponseEntity<Page<BoardDto>> myScrapList(@PathVariable("memberId") Long memberId,
-                                                      @PathVariable int bdTag,
-                                                      @RequestParam(value = "page", defaultValue = "0") int page,
-                                                      @RequestParam(value = "size", defaultValue = "8") int size) {
+    public ResponseEntity<Page<BoardListResDto>> myScrapList(@PathVariable("memberId") Long memberId,
+                                                             @PathVariable int bdTag,
+                                                             @RequestParam(value = "page", defaultValue = "0") int page,
+                                                             @RequestParam(value = "size", defaultValue = "8") int size) {
         if (bdTag == 0) {
             return new ResponseEntity<>(boardService.findAllPage(memberId, page, size), HttpStatus.OK);
         } else {

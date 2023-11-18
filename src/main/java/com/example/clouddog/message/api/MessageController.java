@@ -1,7 +1,7 @@
 package com.example.clouddog.message.api;
 
-import com.example.clouddog.message.api.dto.MessageReqDto;
-import com.example.clouddog.message.api.dto.MessageResDto;
+import com.example.clouddog.message.api.dto.request.MessageReqDto;
+import com.example.clouddog.message.api.dto.response.MessageResDto;
 import com.example.clouddog.message.application.MessageService;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

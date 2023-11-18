@@ -1,4 +1,4 @@
-package com.example.clouddog.comment.application;
+package com.example.clouddog.comment.api.dto.request;
 
 import lombok.AccessLevel;
 import lombok.Getter;

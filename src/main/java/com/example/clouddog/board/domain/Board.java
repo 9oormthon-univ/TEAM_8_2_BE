@@ -1,6 +1,6 @@
 package com.example.clouddog.board.domain;
 
-import com.example.clouddog.board.api.dto.BoardReqDto;
+import com.example.clouddog.board.api.dto.request.BoardReqDto;
 import com.example.clouddog.comment.domain.Comment;
 import com.example.clouddog.image.domain.Image;
 import com.example.clouddog.member.domain.MemberWriteBoard;

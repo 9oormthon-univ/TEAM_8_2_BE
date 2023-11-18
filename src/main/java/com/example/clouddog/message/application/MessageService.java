@@ -3,8 +3,8 @@ package com.example.clouddog.message.application;
 import com.example.clouddog.board.exception.NotFoundMemberException;
 import com.example.clouddog.member.domain.Member;
 import com.example.clouddog.member.domain.repository.MemberRepository;
-import com.example.clouddog.message.api.dto.MessageReqDto;
-import com.example.clouddog.message.api.dto.MessageResDto;
+import com.example.clouddog.message.api.dto.request.MessageReqDto;
+import com.example.clouddog.message.api.dto.response.MessageResDto;
 import com.example.clouddog.message.domain.Message;
 import com.example.clouddog.message.domain.repository.MessageRepository;
 import com.example.clouddog.message.exception.NotFoundMessageException;
@@ -40,7 +40,7 @@ public class MessageService {
             );
             returnList.add(messageDto);
         }
-        
+
         return returnList;
     }
 
