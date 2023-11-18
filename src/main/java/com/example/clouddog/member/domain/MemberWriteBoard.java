@@ -22,6 +22,8 @@ public class MemberWriteBoard {
     @Column(name = "memberWriteBoard_id")
     private Long memberWriteBoard;
 
+    private int tag;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -30,8 +32,10 @@ public class MemberWriteBoard {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public MemberWriteBoard(Member member, Board board) {
+
+    public MemberWriteBoard(Member member, Board board, int tag) {
         this.member = member;
         this.board = board;
+        this.tag=tag;
     }
 }
