@@ -2,6 +2,7 @@ package com.example.clouddog.member.domain;
 
 import com.example.clouddog.board.domain.Board;
 import com.example.clouddog.comment.domain.Comment;
+import com.example.clouddog.comment.domain.LikeComment;
 import com.example.clouddog.member.api.dto.request.MemberProfileUpdateReqDto;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.persistence.CascadeType;
@@ -64,6 +65,9 @@ public class Member implements UserDetails {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberWriteBoard> memberWriteBoards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LikeComment> likeComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Friendship> friends = new ArrayList<>();

@@ -2,6 +2,7 @@ package com.example.clouddog.comment.api.dto.response;
 
 import com.example.clouddog.comment.domain.Comment;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,9 +25,11 @@ public class CommentResDto {
     private LocalDate cmTime;
 
     private int cmLikes;
+    private List<Long> likeCommentMembers;
 
     @Builder
-    private CommentResDto(Long cmId, Long memberId, Long boardId, Long previousCmId, String cmContent, int cmLikes, LocalDate cmTime) {
+    private CommentResDto(Long cmId, Long memberId, Long boardId, String cmContent, int cmLikes, LocalDate cmTime,
+                          List<Long> likeCommentMembers) {
         this.cmId = cmId;
         this.memberId = memberId;
         this.boardId = boardId;
@@ -34,9 +37,10 @@ public class CommentResDto {
         this.cmContent = cmContent;
         this.cmLikes = cmLikes;
         this.cmTime = cmTime;
+        this.likeCommentMembers = likeCommentMembers;
     }
 
-    public static CommentResDto of(Comment comment) {
+    public static CommentResDto of(Comment comment, List<Long> likeCommentMembers) {
         return CommentResDto.builder()
                 .cmId(comment.getCommentId())
                 .memberId(comment.getMember().getMemberId())
@@ -45,6 +49,7 @@ public class CommentResDto {
                 .cmContent(comment.getCommentContent())
                 .cmTime(comment.getCommentTime())
                 .cmLikes(comment.getCommentLikes())
+                .likeCommentMembers(likeCommentMembers)
                 .build();
     }
 }

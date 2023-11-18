@@ -1,5 +1,6 @@
 package com.example.clouddog.comment.api;
 
+import com.example.clouddog.comment.api.dto.LikeCommentDto;
 import com.example.clouddog.comment.api.dto.request.CommentSaveReqDto;
 import com.example.clouddog.comment.api.dto.request.CommentUpdateReqDto;
 import com.example.clouddog.comment.application.CommentService;
@@ -42,16 +43,16 @@ public class CommentController {
     }
 
     //좋아요 추가
-    @PatchMapping("/comments/addLikes/{cmId}")
-    public ResponseEntity<String> addCmLikes(@PathVariable Long cmId) {
-        commentService.addCmLikes(cmId);
+    @PostMapping("/comments/add-likes/{cmId}")
+    public ResponseEntity<String> addCmLikes(@PathVariable Long cmId, @RequestBody LikeCommentDto likeCommentDto) {
+        commentService.addCmLikes(cmId, likeCommentDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
     //좋아요 취소
-    @PatchMapping("/comments/subLikes/{cmId}")
-    public ResponseEntity<String> subCmLikes(@PathVariable Long cmId) {
-        commentService.subCmLikes(cmId);
+    @PostMapping("/comments/sub-likes/{cmId}")
+    public ResponseEntity<String> subCmLikes(@PathVariable Long cmId, @RequestBody LikeCommentDto likeCommentDto) {
+        commentService.subCmLikes(cmId, likeCommentDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 

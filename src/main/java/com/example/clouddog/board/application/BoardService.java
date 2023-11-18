@@ -9,6 +9,9 @@ import com.example.clouddog.board.exception.NotFoundBoardException;
 import com.example.clouddog.board.exception.NotFoundMemberException;
 import com.example.clouddog.comment.api.dto.response.CommentResDto;
 import com.example.clouddog.comment.domain.Comment;
+import com.example.clouddog.comment.domain.LikeComment;
+import com.example.clouddog.comment.domain.repository.CommentRepository;
+import com.example.clouddog.comment.domain.repository.LikeCommentRepository;
 import com.example.clouddog.image.domain.Image;
 import com.example.clouddog.image.domain.repository.ImageRepository;
 import com.example.clouddog.member.domain.Member;
@@ -30,13 +33,19 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final ImageRepository imageRepository;
+    private final CommentRepository commentRepository;
+    private final LikeCommentRepository likeCommentRepository;
     private final MemberWriteBoardRepository memberWriteBoardRepository;
 
     public BoardService(BoardRepository boardRepository, MemberRepository memberRepository,
-                        ImageRepository imageRepository, MemberWriteBoardRepository memberWriteBoardRepository) {
+                        ImageRepository imageRepository, CommentRepository commentRepository,
+                        LikeCommentRepository likeCommentRepository,
+                        MemberWriteBoardRepository memberWriteBoardRepository) {
         this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
         this.imageRepository = imageRepository;
+        this.commentRepository = commentRepository;
+        this.likeCommentRepository = likeCommentRepository;
         this.memberWriteBoardRepository = memberWriteBoardRepository;
     }
 
@@ -68,9 +77,17 @@ public class BoardService {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
         Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
 
+        List<Comment> allComment = commentRepository.findAll();
+
         List<CommentResDto> comments = new ArrayList<>();
-        for (Comment comment : member.getComments()) {
-            comments.add(CommentResDto.of(comment));
+        for (Comment comment : allComment) {
+            List<LikeComment> likeComments = likeCommentRepository.findByComment(comment);
+
+            List<Long> likeCommentMembers = new ArrayList<>();
+            for (LikeComment likeComment : likeComments) {
+                likeCommentMembers.add(likeComment.getMember().getMemberId());
+            }
+            comments.add(CommentResDto.of(comment, likeCommentMembers));
         }
 
         return BoardResDto.of(board, comments);
