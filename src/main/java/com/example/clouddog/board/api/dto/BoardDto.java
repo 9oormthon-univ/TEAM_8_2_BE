@@ -1,6 +1,5 @@
 package com.example.clouddog.board.api.dto;
 
-import com.example.clouddog.image.domain.Image;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +11,14 @@ public class BoardDto {
     private Long bdId;
     private String bdTitle;
     private int bdTag;
-    private Image bdImage;
+    private String bdImage;
 
     public BoardDto(Long bdId,
                     Long memberId,
                     String boardTitle,
                     int boardTag,
-                    Image image
-                    ) {
+                    String image
+    ) {
         this.memberId = memberId;
         this.bdId = bdId;
         this.bdTitle = boardTitle;

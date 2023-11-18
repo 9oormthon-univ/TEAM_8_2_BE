@@ -51,6 +51,7 @@ public class BoardService {
     @Transactional
     public void boardSave(Long memberId, BoardReqDto boardDto) {
         Member member = memberRepository.findById(memberId).orElseThrow();
+
         Image image = imageRepository.findById(boardDto.getImageId()).orElseThrow(NotFoundBoardException::new);
 
         Board board = new Board(
@@ -107,15 +108,14 @@ public class BoardService {
                 m.getMember().getMemberId(),
                 m.getBoard().getBoardTitle(),
                 m.getTag(),
-                m.getBoard().getImage()
+                m.getBoard().getImage().getImageUrl()
         ));
     }
 
     public Page<BoardDto> findByTagPage(Long memberId, int tag, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
-        Page<MemberWriteBoard> boardListPage;
-        boardListPage = memberWriteBoardRepository.findByMemberAndTag(member, tag,
+        Page<MemberWriteBoard> boardListPage = memberWriteBoardRepository.findByMemberAndTag(member, tag,
                 PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberWriteBoardId")));
 
         return boardListPage.map(m -> new BoardDto(
@@ -123,7 +123,7 @@ public class BoardService {
                 m.getMember().getMemberId(),
                 m.getBoard().getBoardTitle(),
                 m.getBoard().getBoardTag(),
-                m.getBoard().getImage()
+                m.getBoard().getImage().getImageUrl()
         ));
     }
 
