@@ -28,12 +28,13 @@ public class CommentResDto {
     private List<Long> likeCommentMembers;
 
     @Builder
-    private CommentResDto(Long cmId, Long memberId, Long boardId, String cmContent, int cmLikes, LocalDate cmTime,
+    private CommentResDto(Long cmId, Long memberId, Long boardId, Long previousCmId, String cmContent, int cmLikes,
+                          LocalDate cmTime,
                           List<Long> likeCommentMembers) {
         this.cmId = cmId;
         this.memberId = memberId;
         this.boardId = boardId;
-        this.previousCmId=previousCmId;
+        this.previousCmId = previousCmId;
         this.cmContent = cmContent;
         this.cmLikes = cmLikes;
         this.cmTime = cmTime;
