@@ -13,8 +13,12 @@ import lombok.NoArgsConstructor;
 public class CommentResDto {
 
     private Long cmId;
+
     private Long memberId;
+
     private Long boardId;
+
+    private Long previousCmId;
 
     private String cmContent;
 
@@ -29,6 +33,7 @@ public class CommentResDto {
         this.cmId = cmId;
         this.memberId = memberId;
         this.boardId = boardId;
+        this.previousCmId=previousCmId;
         this.cmContent = cmContent;
         this.cmLikes = cmLikes;
         this.cmTime = cmTime;
@@ -39,6 +44,7 @@ public class CommentResDto {
         return CommentResDto.builder()
                 .cmId(comment.getCommentId())
                 .memberId(comment.getMember().getMemberId())
+                .previousCmId(comment.getPreviousCmId())
                 .boardId(comment.getBoard().getBoardId())
                 .cmContent(comment.getCommentContent())
                 .cmTime(comment.getCommentTime())

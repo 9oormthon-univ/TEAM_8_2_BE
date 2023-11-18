@@ -29,7 +29,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    //페이징 불러오기
+    //게시글 불러오기
     @GetMapping("/{memberId}/boards/{bdTag}")
     public ResponseEntity<Page<BoardListResDto>> myScrapList(@PathVariable("memberId") Long memberId,
                                                              @PathVariable int bdTag,
