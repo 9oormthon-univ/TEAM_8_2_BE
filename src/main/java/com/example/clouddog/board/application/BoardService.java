@@ -47,6 +47,7 @@ public class BoardService {
         this.memberWriteBoardRepository = memberWriteBoardRepository;
     }
 
+
     // 게시글 저장
     @Transactional
     public void boardSave(Long memberId, BoardReqDto boardDto) {
