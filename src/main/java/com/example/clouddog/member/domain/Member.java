@@ -134,7 +134,7 @@ public class Member implements UserDetails {
     }
 
     public void addBoards(Board board) {
-        MemberWriteBoard memberWriteBoard = new MemberWriteBoard(this, board);
+        MemberWriteBoard memberWriteBoard = new MemberWriteBoard(this, board, board.getBoardTag());
         this.memberWriteBoards.add(memberWriteBoard);
     }
 

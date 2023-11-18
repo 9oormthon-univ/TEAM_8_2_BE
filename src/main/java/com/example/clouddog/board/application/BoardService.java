@@ -13,11 +13,16 @@ import com.example.clouddog.comment.domain.repository.CommentRepository;
 import com.example.clouddog.image.domain.Image;
 import com.example.clouddog.image.domain.repository.ImageRepository;
 import com.example.clouddog.member.domain.Member;
+import com.example.clouddog.member.domain.MemberWriteBoard;
 import com.example.clouddog.member.domain.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.clouddog.member.domain.repository.MemberWriteBoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +35,16 @@ public class BoardService {
     private final MemberRepository memberRepository;
     private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
+    private final MemberWriteBoardRepository memberWriteBoardRepository;
 
     public BoardService(BoardRepository boardRepository, MemberRepository memberRepository,
-                        ImageRepository imageRepository, CommentRepository commentRepository) {
+                        ImageRepository imageRepository, CommentRepository commentRepository,
+                        MemberWriteBoardRepository memberWriteBoardRepository) {
         this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
         this.imageRepository = imageRepository;
         this.commentRepository = commentRepository;
+        this.memberWriteBoardRepository = memberWriteBoardRepository;
     }
 
     // 게시글 저장
@@ -91,17 +99,16 @@ public class BoardService {
     public Page<BoardDto> findAllPage(Long memberId, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
-        Page<Board> boardListPage;
-//        boardListPage = boardRepository.findByMember(member,
-//                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "boardId")));
+        Page<MemberWriteBoard> boardListPage;
+        boardListPage = memberWriteBoardRepository.findMemberWriteBoardsByMember(member,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "board_id")));
 
-        return null;
-//        return boardListPage.map(m -> new BoardDto(
-//                m.getBoardId()
-//                m.getMember().getMemberId(),
-//                m.getBoardTitle(),
-//                m.getBoardTag()
-//        ));
+        return boardListPage.map(m -> new BoardDto(
+                m.getBoard().getBoardId(),
+                m.getMember().getMemberId(),
+                m.getBoard().getBoardTitle(),
+                m.getTag()
+        ));
     }
 
     public Page<BoardDto> findByTagPage(Long memberId, int tag, int page, int size) {
@@ -117,6 +124,7 @@ public class BoardService {
 //                m.getMember().getMemberId(),
 //                m.getBoardTitle(),
 //                m.getBoardTag()
+        //이미지 추가
 //        ));
     }
 
