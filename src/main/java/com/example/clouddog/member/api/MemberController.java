@@ -27,8 +27,8 @@ public class MemberController {
     }
 
     @GetMapping("/my-info")
-    public ResponseEntity<MemberResDto> memberInfo(@RequestParam(name = "email") String email) {
-        return new ResponseEntity<>(memberService.memberInfo(email), HttpStatus.OK);
+    public ResponseEntity<MemberResDto> memberInfo(@RequestParam(name = "uid") String uid) {
+        return new ResponseEntity<>(memberService.memberInfo(uid), HttpStatus.OK);
     }
 
     @PutMapping("/{memberId}")
@@ -40,14 +40,14 @@ public class MemberController {
 
     @GetMapping("/{memberId}/friend/info")
     public ResponseEntity<MemberResDto> friendInfo(@PathVariable(name = "memberId") Long memberId,
-                                                   @RequestParam(name = "email") String friendEmail) {
+                                                   @RequestParam(name = "friendEmail") String friendEmail) {
         return new ResponseEntity<>(memberService.friendInfo(friendEmail), HttpStatus.OK);
     }
 
     @PostMapping("/{memberId}/friend")
     public ResponseEntity<String> friendAdd(@PathVariable(name = "memberId") Long memberId,
                                             @RequestBody FriendSaveReqDto friendSaveReqDto) {
-        memberService.addFriend(friendSaveReqDto);
+        memberService.addFriend(memberId, friendSaveReqDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
@@ -55,7 +55,6 @@ public class MemberController {
     public ResponseEntity<Page<MemberResDto>> friendsInfoList(@PathVariable(name = "memberId") Long memberId,
                                                               @RequestParam(value = "page", defaultValue = "0") int page,
                                                               @RequestParam(value = "size", defaultValue = "4") int size) {
-
         return new ResponseEntity<>(memberService.friendsInfoList(memberId, page, size), HttpStatus.OK);
     }
 

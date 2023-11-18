@@ -1,11 +1,9 @@
 package com.example.clouddog.member.exception;
 
-public class ExistsFriendShipException extends RuntimeException {
-    public ExistsFriendShipException(String message) {
-        super(message);
-    }
+import com.example.clouddog.member.domain.Member;
 
-    public ExistsFriendShipException() {
-        this("이미 존재하는 친구입니다.");
+public class ExistsFriendShipException extends RuntimeException {
+    public ExistsFriendShipException(Member member, Member friend) {
+        super(String.format("%s와 %s는 이미 친구 상태 입니다.", member.getName(), friend.getName()));
     }
 }
