@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +41,7 @@ public class MessageController {
     }
 
     //메시지 수정
-    @PatchMapping("/messages/{msgId}")
+    @PostMapping("/messages/{msgId}")
     public ResponseEntity<String> updateMessage(@PathVariable Long msgId, @RequestBody MessageReqDto msgDto) {
         messageService.messageUpdate(msgId, msgDto);
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
