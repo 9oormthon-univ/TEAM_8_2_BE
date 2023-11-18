@@ -15,10 +15,9 @@ import com.example.clouddog.image.domain.repository.ImageRepository;
 import com.example.clouddog.member.domain.Member;
 import com.example.clouddog.member.domain.MemberWriteBoard;
 import com.example.clouddog.member.domain.repository.MemberRepository;
+import com.example.clouddog.member.domain.repository.MemberWriteBoardRepository;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.clouddog.member.domain.repository.MemberWriteBoardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -100,9 +99,8 @@ public class BoardService {
     public Page<BoardDto> findAllPage(Long memberId, int page, int size) {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
 
-        Page<MemberWriteBoard> boardListPage;
-        boardListPage = memberWriteBoardRepository.findMemberWriteBoardsByMember(member,
-                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "board_id")));
+        Page<MemberWriteBoard> boardListPage = memberWriteBoardRepository.findByMember(member,
+                PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "memberWriteBoardId")));
 
         return boardListPage.map(m -> new BoardDto(
                 m.getBoard().getBoardId(),
