@@ -46,7 +46,12 @@ public class BoardController {
     @PostMapping("/{memberId}/board")
     public ResponseEntity<String> addBoard(@PathVariable(name = "memberId") Long memberId,
                                            @RequestBody BoardReqDto board) {
-        boardService.boardSave(memberId, board);
+        if (board.getImageId() != 0) {
+            boardService.boardAndImageSave(memberId, board);
+        } else {
+            boardService.boardNotImageSave(memberId, board);
+        }
+
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 

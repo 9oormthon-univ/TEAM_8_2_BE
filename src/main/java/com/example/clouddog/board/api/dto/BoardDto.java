@@ -13,17 +13,12 @@ public class BoardDto {
     private int bdTag;
     private String bdImage;
 
-    public BoardDto(Long bdId,
-                    Long memberId,
-                    String boardTitle,
-                    int boardTag,
-                    String image
-    ) {
+    public BoardDto(Long bdId, Long memberId, String boardTitle, int boardTag, String image) {
         this.memberId = memberId;
         this.bdId = bdId;
         this.bdTitle = boardTitle;
         this.bdTag = boardTag;
         this.bdImage = image;
-        //나중에 이미지 추가
     }
+
 }

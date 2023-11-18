@@ -18,6 +18,7 @@ import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -51,15 +52,26 @@ public class Board {
     @JoinColumn(name = "image_id")
     private Image image;
 
-    public Board(String boardTitle, String boardPlace,
-                 int boardTag, String boardContent, String boardTime, Image image) {
-//        this.member = member;
+    @Builder
+    private Board(String boardTitle, String boardPlace,
+                  int boardTag, String boardContent, String boardTime, Image image) {
         this.boardTitle = boardTitle;
         this.boardPlace = boardPlace;
         this.boardTag = boardTag;
         this.boardContent = boardContent;
         this.boardTime = boardTime;
         this.image = image;
+    }
+
+    public static Board of(BoardReqDto boardReqDto, Image image) {
+        return Board.builder()
+                .boardTitle(boardReqDto.getBdTitle())
+                .boardTime(boardReqDto.getBdTime())
+                .boardPlace(boardReqDto.getBdPlace())
+                .boardTag(boardReqDto.getBdTag())
+                .boardContent(boardReqDto.getBdContent())
+                .image(image)
+                .build();
     }
 
     public void update(BoardReqDto boardDto) {

@@ -58,10 +58,6 @@ public class CommentService {
 
     //댓글 삭제
     public void commentDelete(Long cmId) {
-        //실패
-        //Comment comment = commentRepository.findById(cmId).orElseThrow(NotFoundCommentException::new);
-        //Board board = boardRepository.findById(comment.getBoardId().getBoardId()).orElseThrow(NotFoundBoardException::new);
-        //board.getComments().remove(comment);
         commentRepository.deleteById(cmId);
     }
 }
