@@ -9,7 +9,6 @@ import com.example.clouddog.board.exception.NotFoundBoardException;
 import com.example.clouddog.board.exception.NotFoundMemberException;
 import com.example.clouddog.comment.api.dto.CommentResDto;
 import com.example.clouddog.comment.domain.Comment;
-import com.example.clouddog.comment.domain.repository.CommentRepository;
 import com.example.clouddog.image.domain.Image;
 import com.example.clouddog.image.domain.repository.ImageRepository;
 import com.example.clouddog.member.domain.Member;
@@ -33,68 +32,51 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberRepository memberRepository;
     private final ImageRepository imageRepository;
-    private final CommentRepository commentRepository;
     private final MemberWriteBoardRepository memberWriteBoardRepository;
 
     public BoardService(BoardRepository boardRepository, MemberRepository memberRepository,
-                        ImageRepository imageRepository, CommentRepository commentRepository,
-                        MemberWriteBoardRepository memberWriteBoardRepository) {
+                        ImageRepository imageRepository, MemberWriteBoardRepository memberWriteBoardRepository) {
         this.boardRepository = boardRepository;
         this.memberRepository = memberRepository;
         this.imageRepository = imageRepository;
-        this.commentRepository = commentRepository;
         this.memberWriteBoardRepository = memberWriteBoardRepository;
     }
 
 
     // 게시글 저장
     @Transactional
-    public void boardSave(Long memberId, BoardReqDto boardDto) {
-        Member member = memberRepository.findById(memberId).orElseThrow();
+    public void boardAndImageSave(Long memberId, BoardReqDto boardReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+        Image image = imageRepository.findById(boardReqDto.getImageId()).orElseThrow(NotFoundBoardException::new);
 
-        Image image = imageRepository.findById(boardDto.getImageId()).orElseThrow(NotFoundBoardException::new);
-
-        Board board = new Board(
-                boardDto.getBdTitle(),
-                boardDto.getBdPlace(),
-                boardDto.getBdTag(),
-                boardDto.getBdContent(),
-                boardDto.getBdTime(),
-                image
-        );
+        Board board = Board.of(boardReqDto, image);
 
         member.addBoards(board);
         boardRepository.save(board);
     }
 
+    @Transactional
+    public void boardNotImageSave(Long memberId, BoardReqDto boardReqDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+
+        Board board = Board.of(boardReqDto, null);
+
+        member.addBoards(board);
+        boardRepository.save(board);
+
+    }
+
     // 게시글 상세보기_1개 자세히 불러오기 -> 여기서 member.boards 프록시 문제
     public BoardResDto findById(Long memberId, Long boardId) {
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
         Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
 
         List<CommentResDto> comments = new ArrayList<>();
         for (Comment comment : member.getComments()) {
-            comments.add(new CommentResDto(
-                    comment.getCommentId(),
-                    comment.getMember().getMemberId(),
-                    comment.getBoard().getBoardId(),
-                    comment.getCommentContent(),
-                    comment.getCommentLikes(),
-                    comment.getCommentTime()));
+            comments.add(CommentResDto.of(comment));
         }
 
-        BoardResDto boardDto = new BoardResDto(
-                board.getBoardId(),
-                board.getBoardTitle(),
-                board.getBoardPlace(),
-                board.getBoardContent(),
-                board.getBoardTag(),
-                board.getBoardTime(),
-                board.getImage().getImageUrl(),
-                comments
-        );
-
-        return boardDto;
+        return BoardResDto.of(board, comments);
     }
 
     public Page<BoardDto> findAllPage(Long memberId, int page, int size) {

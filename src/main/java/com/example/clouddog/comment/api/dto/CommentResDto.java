@@ -1,7 +1,9 @@
 package com.example.clouddog.comment.api.dto;
 
+import com.example.clouddog.comment.domain.Comment;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,12 +21,24 @@ public class CommentResDto {
 
     private int cmLikes;
 
-    public CommentResDto(Long cmId, Long memberId, Long boardId, String cmContent, int cmLikes, LocalDate cmTime) {
+    @Builder
+    private CommentResDto(Long cmId, Long memberId, Long boardId, String cmContent, int cmLikes, LocalDate cmTime) {
         this.cmId = cmId;
         this.memberId = memberId;
         this.boardId = boardId;
         this.cmContent = cmContent;
         this.cmLikes = cmLikes;
         this.cmTime = cmTime;
+    }
+
+    public static CommentResDto of(Comment comment) {
+        return CommentResDto.builder()
+                .cmId(comment.getCommentId())
+                .memberId(comment.getMember().getMemberId())
+                .boardId(comment.getBoard().getBoardId())
+                .cmContent(comment.getCommentContent())
+                .cmTime(comment.getCommentTime())
+                .cmLikes(comment.getCommentLikes())
+                .build();
     }
 }

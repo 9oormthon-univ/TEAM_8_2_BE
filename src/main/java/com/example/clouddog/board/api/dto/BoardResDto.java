@@ -1,9 +1,11 @@
 package com.example.clouddog.board.api.dto;
 
+import com.example.clouddog.board.domain.Board;
 import com.example.clouddog.comment.api.dto.CommentResDto;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,16 +29,30 @@ public class BoardResDto {
 
     List<CommentResDto> comments = new ArrayList<>();
 
-    public BoardResDto(Long bdId, String boardTitle, String boardPlace,
-                       String boardTime, int boardTag, String boardContent, String imageUrl,
-                       List<CommentResDto> comments) {
+    @Builder
+    private BoardResDto(Long bdId, String bdTitle, String bdPlace, String bdTime,
+                        int bdTag, String bdContent, String imageUrl,
+                        List<CommentResDto> comments) {
         this.bdId = bdId;
-        this.bdTitle = boardTitle;
-        this.bdPlace = boardPlace;
-        this.bdTag = boardTag;
-        this.bdContent = boardContent;
-        this.bdTime = boardTime;
+        this.bdTitle = bdTitle;
+        this.bdPlace = bdPlace;
+        this.bdTime = bdTime;
+        this.bdTag = bdTag;
+        this.bdContent = bdContent;
         this.imageUrl = imageUrl;
         this.comments = comments;
+    }
+
+    public static BoardResDto of(Board board, List<CommentResDto> comments) {
+        return BoardResDto.builder()
+                .bdId(board.getBoardId())
+                .bdTitle(board.getBoardTitle())
+                .bdPlace(board.getBoardPlace())
+                .bdTime(board.getBoardTime())
+                .bdTag(board.getBoardTag())
+                .bdContent(board.getBoardContent())
+                .imageUrl(board.getImage().getImageUrl())
+                .comments(comments)
+                .build();
     }
 }
