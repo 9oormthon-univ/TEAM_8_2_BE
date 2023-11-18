@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 public class MessageService {
 
     private final MessageRepository messageRepository;
@@ -29,6 +31,7 @@ public class MessageService {
     public List<MessageResDto> messageFind(Long memberId) {
         List<MessageResDto> returnList = new ArrayList<>();
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
+
         for (Message message : messageRepository.findByMember(member)) {
             MessageResDto messageDto = new MessageResDto(
                     message.getMessageId(),
@@ -37,10 +40,12 @@ public class MessageService {
             );
             returnList.add(messageDto);
         }
+        
         return returnList;
     }
 
     //메세지 등록
+    @Transactional
     public void messageSave(MessageReqDto messageDto) {
         Member member = memberRepository.findById(messageDto.getMemberId()).orElseThrow(NotFoundMessageException::new);
         Message message = new Message(member, messageDto.getMsgContent());
@@ -48,11 +53,14 @@ public class MessageService {
     }
 
     //메세지 수정
+    @Transactional
     public void messageUpdate(Long msgId, MessageReqDto updateMsg) {
-        messageRepository.findById(msgId).orElseThrow(NotFoundMessageException::new).update(updateMsg.getMsgContent());
+        Message message = messageRepository.findById(msgId).orElseThrow(NotFoundMessageException::new);
+        message.update(updateMsg);
     }
 
     //메세지 삭제
+    @Transactional
     public void messageDelete(Long msgId) {
         messageRepository.deleteById(msgId);
     }
