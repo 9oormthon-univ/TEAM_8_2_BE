@@ -20,7 +20,7 @@ public class MemberWriteBoard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "memberWriteBoard_id")
-    private Long memberWriteBoard;
+    private Long memberWriteBoardId;
 
     private int tag;
 
@@ -36,6 +36,6 @@ public class MemberWriteBoard {
     public MemberWriteBoard(Member member, Board board, int tag) {
         this.member = member;
         this.board = board;
-        this.tag=tag;
+        this.tag = tag;
     }
 }
