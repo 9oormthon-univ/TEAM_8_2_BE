@@ -77,10 +77,10 @@ public class BoardService {
         Member member = memberRepository.findById(memberId).orElseThrow(NotFoundMemberException::new);
         Board board = boardRepository.findById(boardId).orElseThrow(NotFoundBoardException::new);
 
-        List<Comment> allComment = commentRepository.findAll();
+        List<Comment> boardComments = commentRepository.findByBoard(board);
 
         List<CommentResDto> comments = new ArrayList<>();
-        for (Comment comment : allComment) {
+        for (Comment comment : boardComments) {
             List<LikeComment> likeComments = likeCommentRepository.findByComment(comment);
 
             List<Long> likeCommentMembers = new ArrayList<>();
